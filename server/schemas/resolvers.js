@@ -29,12 +29,12 @@ const resolvers = {
       return { token, newProfile }
     },
 
-    login: async (parent, { email, password }) => {
-      const profile = await User.findOne({ email });
+    login: async (parent, { username, password }) => {
+      const profile = await User.findOne({ username });
 
       if (!profile) {
 
-        throw new AuthenticationError('No profile with this email found!');
+        throw new AuthenticationError('No profile with this username found!');
       }
 
       const correctPw = await profile.isCorrectPassword(password);

@@ -37,7 +37,7 @@ const LoginForm = () => { //may need to intake props
 
     // clear form values
     setFormState({
-      email: '',
+      username: '',
       password: '',
     });
   };
@@ -55,16 +55,16 @@ const LoginForm = () => { //may need to intake props
             Something went wrong with your login credentials!
           </Alert>
           <Form.Group className='mb-3'>
-            <Form.Label htmlFor='email'>Email</Form.Label>
+            <Form.Label htmlFor='username'>Username</Form.Label>
             <Form.Control
-              type='email'
-              placeholder='Your email'
-              name='email'
+              type='text'
+              placeholder='Your username'
+              name='username'
               onChange={handleInputChange}
-              value={formState.email}
+              value={formState.username}
               required
             />
-            <Form.Control.Feedback type='invalid'>Email is required!</Form.Control.Feedback>
+            <Form.Control.Feedback type='invalid'>Username is required!</Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className='mb-3'>
@@ -80,7 +80,7 @@ const LoginForm = () => { //may need to intake props
             <Form.Control.Feedback type='invalid'>Password is required!</Form.Control.Feedback>
           </Form.Group>
           <Button
-            disabled={!(formState.email && formState.password)}
+            disabled={!(formState.username && formState.password)}
             type='submit'
             variant='success'>
             Submit
