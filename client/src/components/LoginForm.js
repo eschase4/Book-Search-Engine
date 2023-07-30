@@ -57,7 +57,7 @@ const LoginForm = () => { //may need to intake props
           <Form.Group className='mb-3'>
             <Form.Label htmlFor='email'>Email</Form.Label>
             <Form.Control
-              type='text'
+              type='email'
               placeholder='Your email'
               name='email'
               onChange={handleInputChange}

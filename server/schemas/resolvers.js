@@ -1,5 +1,6 @@
 const { User, Book } = require('../models');
-const { signToken } = require('../utils/auth');
+const auth = require('../utils/auth');
+const { signToken, authMiddleware } = require('../utils/auth');
 const { AuthenticationError } = require('apollo-server-express');
 
 
@@ -13,8 +14,8 @@ const resolvers = {
       return User.findOne({ _id: userId })
     },
     me: async (parent, args, context) => {
+      console.log(context.user, 'context')
       if (context.user) {
-        console.log(context.user)
         return User.findOne({ _id: context.user._id });
       }
       throw new AuthenticationError('You need to be logged in!');
@@ -46,9 +47,20 @@ const resolvers = {
       return { token, profile };
     },
 
-    saveBook: async (parent, { authors, description, bookId, image, title }) => {
+    saveBook: async (parent, { authors, description, bookId, image, title }, context) => {
+      
+      if (!context.user) {
+        throw new AuthenticationError('You need to be logged in to save a book!');
+      }
+
       const newBook = await Book.create({ authors, description, bookId, image, title });
-      const addBook = await User.findOneAndUpdate({ _id: context.user._id }, { $addToSet: { savedBooks: newBook } }, { new: true });
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: context.user._id },
+        { $addToSet: { savedBooks: newBook } },
+        { new: true }
+      );
+
+      return updatedUser;
     }
   }
 }
