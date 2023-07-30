@@ -8,7 +8,7 @@ const resolvers = {
     },
 
     getSingleUser: async (parent, { userId }) => {
-      return User.findOne({_id: userId})
+      return User.findOne({ _id: userId })
     },
     me: async (parent, args, context) => {
       if (context.user) {
@@ -19,15 +19,17 @@ const resolvers = {
   },
 
   Mutation: {
-    createUser: async (parent, {username, email, password}) => {
-      const newProfile = await User.create({username, email, password});
+    createUser: async (parent, { username, email, password }) => {
+      const newProfile = await User.create({ username, email, password });
       const token = signToken(newProfile)
       return { token, newProfile }
     },
-    login: async (parent, { email, password }) => { 
+
+    login: async (parent, { email, password }) => {
       const profile = await User.findOne({ email });
 
       if (!profile) {
+
         throw new AuthenticationError('No profile with this email found!');
       }
 
