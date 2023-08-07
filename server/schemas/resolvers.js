@@ -48,7 +48,7 @@ const resolvers = {
     },
 
     saveBook: async (parent, { authors, description, bookId, image, title }, context) => {
-      
+
       if (!context.user) {
         throw new AuthenticationError('You need to be logged in to save a book!');
       }
@@ -59,9 +59,18 @@ const resolvers = {
         { $addToSet: { savedBooks: newBook } },
         { new: true }
       );
-
       return updatedUser;
-    }
-  }
-}
+    },
+
+    deleteBook: async (parent, { bookId }, context) => {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: context.user._id },
+        { $pull: { savedBooks: { bookId: bookId } } },
+        { new: true }
+      );
+      return updatedUser;
+    },
+  },
+};
+
 module.exports = resolvers;
