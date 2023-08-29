@@ -20,10 +20,20 @@ const SavedBooks = () => {
   const handleDeleteBook = async (bookId) => {
 
     try {
-      const { data } = await deleteBook({
-        variables: { bookId }
+      await deleteBook({
+        variables: { bookId },
+        update: (cache) => {
+          const data = cache.readQuery({ query: QUERY_ME });
+          const userDataCache = data.me;
+          const savedBooksCache = userDataCache.savedBooks;
+          const updatedBookCache = savedBooksCache.filter((book) => book.bookId !== bookId);
+          cache.writeQuery({
+            query: QUERY_ME,
+            data: { me: { ...userDataCache, savedBooks: updatedBookCache } }
+          })
+        }
       })
-      window.location.reload()
+      // window.location.reload()
     } catch (err) {
       console.error(err)
     }
